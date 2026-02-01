@@ -1,0 +1,45 @@
+<div class="main-container">
+  <header class="teams-header">
+    <h1>My Teams</h1>
+    <div class="header-actions">
+      <input type="text" class="search-input" placeholder="New team name...">
+      <button class="add-btn-main" (click)="showAddModal = true">
+        + Create New Project
+      </button>
+    </div>
+  </header>
+
+  <hr class="separator">
+
+  <div class="teams-grid">
+    <div *ngFor="let project of projectsList()" class="team-card">
+      <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
+     
+
+      <div class="card-content">
+        <div class="card-icon">🚀</div>
+        <h3 class="project-name">{{ project.name }}</h3>
+        <p class="team-id">Team ID: {{ project._id || project.id }}</p>
+      </div>
+      
+      <button class="view-tasks-btn" (click)="enterProject(project._id || project.id)">
+        View Tasks
+      </button>
+    </div>
+
+    <div *ngIf="projectsList().length === 0" class="empty-state">
+      <p>No projects found in this team yet.</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showAddModal">
+    <div class="modal-content">
+      <h2>New Project</h2>
+      <input type="text" #pName placeholder="Enter project name..." class="modal-input">
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="showAddModal = false">Cancel</button>
+        <button class="save-btn" (click)="createProject(pName.value)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

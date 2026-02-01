@@ -1,0 +1,31 @@
+<div class="main-container">
+  <div class="edit-profile-box">
+    
+    <div class="image-upload-section">
+      <div class="profile-avatar">
+        <img *ngIf="previewUrl" [src]="previewUrl" alt="Profile">
+        <span *ngIf="!previewUrl">{{ tempName.charAt(0).toUpperCase() }}</span>
+      </div>
+      
+      <label for="avatarInput" class="upload-link">
+        Update Photo
+        <input type="file" id="avatarInput" (change)="onFileSelected($event)" accept="image/*" hidden>
+      </label>
+    </div>
+
+    <div class="input-section">
+      <label>Full Name</label>
+      <input 
+        type="text" 
+        [(ngModel)]="tempName" 
+        placeholder="Enter your name"
+        class="name-field">
+    </div>
+
+    <button class="save-changes-btn" (click)="saveProfile()">
+      Save Changes
+    </button>
+
+    <p *ngIf="alertMessage()" class="success-msg">{{ alertMessage() }}</p>
+  </div>
+</div>

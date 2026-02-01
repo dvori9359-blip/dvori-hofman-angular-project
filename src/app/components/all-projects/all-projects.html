@@ -1,0 +1,63 @@
+<div class="main-container">
+  <header class="teams-header">
+    <h1>All Projects</h1>
+    <div class="header-actions">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search projects..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)">
+    </div>
+  </header>
+
+  <hr class="separator">
+
+  <div class="teams-grid">
+    <div *ngFor="let project of filteredProjects()" class="team-card" (click)="enterProject(project._id || project.id)">
+      
+      <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
+    
+
+      <div class="card-content">
+        <div class="card-icon">🚀</div>
+        <h3 class="project-name">{{ project.name }}</h3>
+        <p class="team-id">ID: {{ project._id || project.id }}</p>
+      </div>
+      
+      <button class="enter-btn">
+        View Tasks
+      </button>
+    </div>
+
+    <div *ngIf="filteredProjects().length === 0" class="empty-state">
+      <p>No projects found matching your search.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showTeamModal">
+  <div class="modal-content">
+    <h2>Manage Team</h2>
+    <div class="form-group">
+      <label>Add Member:</label>
+      <select [(ngModel)]="selectedUserIdToAdd" class="modal-input">
+        <option [ngValue]="null">Select a user...</option>
+        <option *ngFor="let user of allUsersList()" [value]="user.id">{{ user.name }}</option>
+      </select>
+    </div>
+    
+    <div class="members-list">
+      <h4>Current Members:</h4>
+      <ul>
+        <li *ngFor="let member of currentTeamMembers()">{{ member.name }}</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" (click)="showTeamModal = false">Close</button>
+      <button class="save-btn" (click)="addMemberToProjectTeam()">Add User</button>
+    </div>
+    <p *ngIf="alertMessage()" class="alert-text">{{ alertMessage() }}</p>
+  </div>
+</div>

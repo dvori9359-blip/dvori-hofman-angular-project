@@ -1,0 +1,31 @@
+<header class="navbar">
+  <div class="navbar-content">
+    <div class="brand" routerLink="/">
+      <span class="logo-icon">🚀</span>
+      <span class="logo-text">Task Manager</span>
+    </div>
+
+    @if (authService.isAuthenticated()) {
+      <nav>
+        <a routerLink="/teams" routerLinkActive="active-link">Teams</a>
+        <a routerLink="/AllProjects" routerLinkActive="active-link">AllProjects</a>
+        <a routerLink="/teams" routerLinkActive="active-link">Dashboard</a>
+        <a routerLink="/settings" routerLinkActive="active-link">Settings</a>
+      </nav>
+    }
+
+    <div class="actions">
+      @if (authService.isAuthenticated()) {
+        <div class="user-info">
+          @if (authService.currentUser(); as user) {
+            <span class="username">Hello, {{ user.name }}</span>
+            <div class="user-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
+          }
+          <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="login-btn">Login</a>
+      }
+    </div>
+  </div>
+</header>

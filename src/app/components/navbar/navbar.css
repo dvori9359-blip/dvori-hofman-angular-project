@@ -1,0 +1,110 @@
+.navbar {
+  background: white;
+  border-bottom: 1px solid #e1e4e8;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* מחלק לשמאל, מרכז וימין */
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #172b4d;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo-icon { font-size: 1.5rem; }
+
+nav {
+  display: flex;
+  gap: 1rem;
+  position: absolute; /* ממקם את התפריט בדיוק במרכז הבר */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+nav a {
+  text-decoration: none;
+  color: #5e6c84;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+nav a:hover {
+  color: #0052cc;
+}
+
+nav a.active-link {
+  color: #0052cc;
+  border-bottom: 2px solid #0052cc;
+  border-radius: 0; /* קו תחתון כמו בתמונה */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.username {
+  color: #172b4d;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: #ebecf0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #42526e;
+  font-size: 0.85rem;
+}
+
+.logout-btn {
+  background: white;
+  border: 1px solid #dfe1e6;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: #d32f2f;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  background: #fff1f0;
+  border-color: #ffccc7;
+}
+
+.login-btn {
+  background: #0052cc;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+}

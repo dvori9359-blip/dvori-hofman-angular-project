@@ -1,0 +1,58 @@
+<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <h2>{{ isRegister ? 'הרשמה' : 'התחברות' }}</h2>
+    
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group" *ngIf="isRegister">
+        <label for="name">שם מלא</label>
+        <input 
+          type="text" 
+          id="name" 
+          [(ngModel)]="name" 
+          name="name" 
+          required
+          placeholder="שם מלא">
+      </div>
+
+      <div class="form-group">
+        <label for="email">אימייל</label>
+        <input 
+          type="email" 
+          id="email" 
+          [(ngModel)]="email" 
+          name="email" 
+          required
+          placeholder="example@mail.com">
+      </div>
+
+      <div class="form-group">
+        <label for="password">סיסמה</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password" 
+          name="password" 
+          required
+          placeholder="********">
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="isLoading" class="submit-btn">
+        {{ isLoading ? 'טוען...' : (isRegister ? 'הרשמה' : 'התחברות') }}
+      </button>
+    </form>
+
+    <div class="toggle-mode">
+      <p>
+        {{ isRegister ? 'כבר רשום?' : 'עדיין אין לך חשבון?' }}
+        <button type="button" (click)="toggleMode()" class="link-btn">
+          {{ isRegister ? 'התחבר כאן' : 'הירשם עכשיו' }}
+        </button>
+      </p>
+    </div>
+  </div>
+</div>

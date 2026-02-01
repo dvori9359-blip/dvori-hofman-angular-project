@@ -1,0 +1,92 @@
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+.teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-input {
+  padding: 12px 20px;
+  border: 1px solid #dfe1e6;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.team-card {
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+  padding: 35px 25px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-icon { font-size: 50px; margin-bottom: 15px; }
+
+.enter-btn {
+  width: 100%;
+  background: #f4f5f7;
+  color: #5e6c84;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: 0.2s;
+}
+
+.team-card:hover .enter-btn {
+  background: #0052cc;
+  color: white;
+}
+
+.delete-btn-x, .manage-team-btn {
+  position: absolute;
+  top: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.delete-btn-x { left: 15px; color: #de350b; }
+.manage-team-btn { right: 15px; font-size: 18px; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 450px;
+}
