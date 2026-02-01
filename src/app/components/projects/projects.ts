@@ -57,13 +57,13 @@ createProject(name: string): void {
   onDeleteProject(projectId: any, event: Event): void {
     event.stopPropagation(); 
     
-    if (confirm('האם אתה בטוח שברצונך למחוק פרויקט זה?')) {
+    if (confirm('Are you sure you want to delete this project?')) {
       const idToDelete = Number(projectId);
       this.teamsService.deleteProject(idToDelete).subscribe({
         next: () => {
           this.projectsList.update(pList => pList.filter(p => p.id !== projectId && p._id !== projectId));
         },
-        error: (err) => alert('המחיקה נכשלה: ' + (err.error?.message || 'אין הרשאה'))
+        error: (err) => alert('Deletion failed: ' + (err.error?.message || 'Permission denied'))
       });
     }
   }

@@ -17,7 +17,6 @@ export class AllProjects implements OnInit {
   searchTerm = signal('');
   showAddModal = false;
   newProjectName = '';
- 
   defaultTeamId = 1; 
 
   private teamsService = inject(TeamsService);

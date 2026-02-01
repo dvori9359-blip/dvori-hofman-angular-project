@@ -121,13 +121,13 @@ export class Tasks implements OnInit {
       this.tasksService.addComment(tId, this.newCommentText).subscribe(res => {
         this.comments.update(old => [...old, res]);
         this.newCommentText = '';
-      });
+            });
     }
   }
 
   deleteTask(taskId: string | undefined): void {
     if (!taskId) return;
-    if (confirm('האם למחוק משימה זו?')) {
+    if (confirm('Are you sure you want to delete this task?')) {
       this.tasksService.deleteTask(taskId).subscribe(() => {
         this.selectedTask = null;
         this.loadTasks();

@@ -22,7 +22,6 @@ export class Settings implements OnInit {
     const user = this.authService.currentUser(); 
     if (user) {
       this.tempName = user.name;
-      // אין צורך ב-Casting יותר!
       this.previewUrl = user.profileImage || null; 
     }
   }
@@ -34,7 +33,7 @@ export class Settings implements OnInit {
       reader.onload = () => this.previewUrl = reader.result as string;
       reader.readAsDataURL(file);
     } else {
-      alert('הקובץ גדול מדי (מקסימום 500KB)');
+      alert('File is too large (max 500KB)');
     }
   }
 
@@ -47,7 +46,7 @@ export class Settings implements OnInit {
         profileImage: this.previewUrl || undefined 
       };
       this.authService.updateUser(updatedData);
-      this.alertMessage.set('הפרופיל עודכן בהצלחה!');
+      this.alertMessage.set('Profile updated successfully!');
       setTimeout(() => this.alertMessage.set(null), 3000);
     }
   }

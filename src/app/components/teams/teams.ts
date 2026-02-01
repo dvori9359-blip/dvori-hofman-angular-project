@@ -62,25 +62,25 @@ export class Teams implements OnInit {
     if (this.selectedTeamIdForManage && this.selectedUserIdToAdd) {
       this.teamsService.addMemberToTeam(this.selectedTeamIdForManage, this.selectedUserIdToAdd).subscribe({
         next: () => {
-          this.alertMessage.set('החבר נוסף בהצלחה!'); 
+          this.alertMessage.set('Member added successfully!'); 
           this.loadTeams(); 
           this.loadCurrentTeamMembers();
           this.selectedUserIdToAdd = null;
         },
-        error: () => this.alertMessage.set('שגיאה בהוספת חבר')
+        error: () => this.alertMessage.set('Error adding member')
       });
     }
   }
 
   removeMember(userId: any) {
     if (!this.selectedTeamIdForManage) return;
-    if (confirm('האם להסיר את החבר מהצוות?')) {
+    if (confirm('Are you sure you want to remove this member from the team?')) {
       this.teamsService.removeMemberFromTeam(this.selectedTeamIdForManage, Number(userId)).subscribe({
         next: () => {
           this.loadTeams(); 
           this.loadCurrentTeamMembers(); 
         },
-        error: () => this.alertMessage.set('שגיאה בהסרת חבר')
+        error: () => this.alertMessage.set('Error removing member')
       });
     }
   }

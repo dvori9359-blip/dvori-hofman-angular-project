@@ -30,7 +30,7 @@ export class Login {
 
   onSubmit(): void {
     if (!this.email || !this.password || (this.isRegister && !this.name)) {
-      this.errorMessage = 'נא למלא את כל השדות';
+      this.errorMessage = 'Please fill in all fields';
       return;
     }
 
@@ -46,7 +46,7 @@ export class Login {
         this.router.navigate(['/teams']);
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || (this.isRegister ? 'שגיאה בהרשמה' : 'שגיאה בהתחברות');
+        this.errorMessage = err.error?.message || (this.isRegister ? 'Registration error' : 'Login error');
         this.isLoading = false;
       },
       complete: () => this.isLoading = false

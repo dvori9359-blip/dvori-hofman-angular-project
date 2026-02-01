@@ -1,22 +1,21 @@
-
 <div class="login-container">
   <div class="login-card">
-    <h2>{{ isRegister ? 'הרשמה' : 'התחברות' }}</h2>
+    <h2>{{ isRegister ? 'Register' : 'Login' }}</h2>
     
     <form (ngSubmit)="onSubmit()">
       <div class="form-group" *ngIf="isRegister">
-        <label for="name">שם מלא</label>
+        <label for="name">Full Name</label>
         <input 
           type="text" 
           id="name" 
           [(ngModel)]="name" 
           name="name" 
           required
-          placeholder="שם מלא">
+          placeholder="Full Name">
       </div>
 
       <div class="form-group">
-        <label for="email">אימייל</label>
+        <label for="email">Email</label>
         <input 
           type="email" 
           id="email" 
@@ -27,7 +26,7 @@
       </div>
 
       <div class="form-group">
-        <label for="password">סיסמה</label>
+        <label for="password">Password</label>
         <input 
           type="password" 
           id="password" 
@@ -42,15 +41,15 @@
       </div>
 
       <button type="submit" [disabled]="isLoading" class="submit-btn">
-        {{ isLoading ? 'טוען...' : (isRegister ? 'הרשמה' : 'התחברות') }}
+        {{ isLoading ? 'Loading...' : (isRegister ? 'Register' : 'Login') }}
       </button>
     </form>
 
     <div class="toggle-mode">
       <p>
-        {{ isRegister ? 'כבר רשום?' : 'עדיין אין לך חשבון?' }}
+        {{ isRegister ? 'Already registered?' : 'Don\'t have an account yet?' }}
         <button type="button" (click)="toggleMode()" class="link-btn">
-          {{ isRegister ? 'התחבר כאן' : 'הירשם עכשיו' }}
+          {{ isRegister ? 'Login here' : 'Register now' }}
         </button>
       </p>
     </div>
