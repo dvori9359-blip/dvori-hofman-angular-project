@@ -41,18 +41,18 @@ export class Projects implements OnInit {
     }
   }
 
-  createProject(): void {
-    if (!this.newProjectName.trim() || this.currentTeamId === null) return;
+createProject(name: string): void {
+    if (!name.trim() || this.currentTeamId === null) return;
 
-    this.teamsService.createProject(this.currentTeamId, this.newProjectName).subscribe({
+    this.teamsService.createProject(this.currentTeamId, name).subscribe({
       next: (newProject: Project) => {
         this.projectsList.update((projects) => [...projects, newProject]);
         this.newProjectName = '';
-        this.showAddModal = false;
+        this.showAddModal = false; 
       },
       error: (err) => console.error('Error creating project:', err)
     });
-  }
+}
 
   onDeleteProject(projectId: any, event: Event): void {
     event.stopPropagation(); 

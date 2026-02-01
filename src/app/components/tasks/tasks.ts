@@ -92,10 +92,8 @@ export class Tasks implements OnInit {
     this.selectedTask = { ...task };
     this.isCommentMode = commentMode;
 
-    const tId = task.id || task._id; 
-    if (tId) {
-      this.tasksService.getComments(tId).subscribe(c => this.comments.set(c || []));
-    }
+    const tempTask: any = { title: '', description: '', status: status };
+  this.openTaskModal(tempTask);
   }
 
   saveTaskChanges(): void {
