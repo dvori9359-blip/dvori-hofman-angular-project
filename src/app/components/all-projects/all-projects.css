@@ -1,4 +1,4 @@
-/* Container & Header */
+
 .main-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -47,7 +47,6 @@
   margin: 1rem 0 2rem;
 }
 
-/* Grid System */
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -55,7 +54,6 @@
   margin-top: 2rem;
 }
 
-/* Project Card */
 .team-card {
   background: white;
   border-radius: 12px;
@@ -93,8 +91,8 @@
 
 .delete-btn-x {
   position: absolute;
-  top: 10px;    /* נשאר למעלה */
-  left: 10px;   /* <--- זה התיקון! במקום right משתמשים ב-left */
+  top: 10px;    
+  left: 10px;   
   background: none;
   border: none;
   color: #de350b;
@@ -102,14 +100,13 @@
   cursor: pointer;
   opacity: 0.5;
   transition: opacity 0.2s;
-  z-index: 10;  /* מבטיח שהאיקס יהיה מעל הכל */
+  z-index: 10; 
 }
 
 .delete-btn-x:hover {
   opacity: 1;
 }
 
-/* כפתור תחתון - משנה צבע ב-hover של הכרטיסייה */
 .view-tasks-btn {
   width: 100%;
   margin-top: 15px;
@@ -128,7 +125,6 @@
   color: white;
 }
 
-/* Modal Styling */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -202,7 +198,6 @@
 .save-btn:hover { background: #0065ff; }
 .close-x { background: none; border: none; font-size: 20px; cursor: pointer; color: #5e6c84; }
 
-/* Modal Styling */
 .modal-overlay {
   position: fixed;
   inset: 0;

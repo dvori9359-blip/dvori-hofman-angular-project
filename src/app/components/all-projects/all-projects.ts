@@ -17,8 +17,7 @@ export class AllProjects implements OnInit {
   searchTerm = signal('');
   showAddModal = false;
   newProjectName = '';
-  
-  // ניתן לשנות ל-ID של צוות ברירת מחדל קיים במערכת שלך
+ 
   defaultTeamId = 1; 
 
   private teamsService = inject(TeamsService);
