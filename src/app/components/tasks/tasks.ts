@@ -2,15 +2,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { ActivatedRoute } from '@angular/router';
-
-// Services
 import { TasksService } from '../../services/tasks.service'; 
-import { TeamsService } from '../../services/teams.service';
-
-// Models
 import { Task, Comment } from '../../models/task.model';
 import { User } from '../../models/user.model';
 import { Project } from '../../models/project.model';
+import { TeamsService } from '../../services/teams.service';
 
 @Component({
   selector: 'app-tasks',
@@ -20,7 +16,6 @@ import { Project } from '../../models/project.model';
   styleUrls: ['./tasks.css']   
 })
 export class Tasks implements OnInit {
-
   tasksList = signal<Task[]>([]);
   teamMembers = signal<User[]>([]); 
   comments = signal<Comment[]>([]);
@@ -32,11 +27,12 @@ export class Tasks implements OnInit {
   showCreateModal = false;
   newTaskTitle = '';
   newTaskStatus: 'Todo' | 'In Progress' | 'Done' = 'Todo';
+  projectName: string = 'Project Tasks';
 
   private route = inject(ActivatedRoute);
   private tasksService = inject(TasksService);
   private teamsService = inject(TeamsService);
-  projectName: string = 'Project Tasks';
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
@@ -69,6 +65,10 @@ export class Tasks implements OnInit {
       }
     });
   }
+  openCreateTaskModal(status: any): void {
+    this.newTaskStatus = status;
+    this.showCreateModal = true;
+  }
 
   createNewTask(): void {
     if (!this.newTaskTitle.trim() || !this.projectId) return;
@@ -92,8 +92,10 @@ export class Tasks implements OnInit {
     this.selectedTask = { ...task };
     this.isCommentMode = commentMode;
 
-    const tempTask: any = { title: '', description: '', status: status };
-  this.openTaskModal(tempTask);
+    const tId = task.id || task._id; 
+    if (tId) {
+      this.tasksService.getComments(tId).subscribe(c => this.comments.set(c || []));
+    }
   }
 
   saveTaskChanges(): void {
