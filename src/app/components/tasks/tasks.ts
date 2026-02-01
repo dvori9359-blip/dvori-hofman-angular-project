@@ -36,7 +36,7 @@ export class Tasks implements OnInit {
   private route = inject(ActivatedRoute);
   private tasksService = inject(TasksService);
   private teamsService = inject(TeamsService);
-
+  projectName: string = 'Project Tasks';
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
