@@ -18,43 +18,48 @@
   <hr class="separator">
 
   <div class="teams-grid">
-    <div *ngFor="let project of filteredProjects()" class="team-card" (click)="enterProject(project._id || project.id)">
-      
-      <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
-
-      <div class="card-content">
-        <div class="card-icon">🚀</div>
-        <h3 class="project-name">{{ project.name }}</h3>
-        <p class="team-id">Project ID: {{ project._id || project.id }}</p>
-      </div>
-      
-      <button class="view-tasks-btn">
-        View Tasks
-      </button>
-    </div>
-
-    <div *ngIf="filteredProjects().length === 0" class="empty-state">
-      <p>No projects found matching your search.</p>
-    </div>
-  </div>
-
-  <div class="modal-overlay" *ngIf="showAddModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>New Project</h2>
-        <button class="close-x" (click)="showAddModal = false">✕</button>
-      </div>
-
-      <input 
-        type="text" 
-        [(ngModel)]="newProjectName" 
-        placeholder="Enter project name..." 
-        class="modal-input">
+    @for (project of filteredProjects(); track (project._id || project.id)) {
+      <div class="team-card" (click)="enterProject(project._id || project.id)">
         
-      <div class="modal-actions">
-        <button class="cancel-btn" (click)="showAddModal = false">Cancel</button>
-        <button class="save-btn" (click)="createProject()" [disabled]="!newProjectName.trim()">Save</button>
+        <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
+
+        <div class="card-content">
+          <div class="card-icon">🚀</div>
+          <h3 class="project-name">{{ project.name }}</h3>
+          <p class="team-id">Project ID: {{ project._id || project.id }}</p>
+        </div>
+        
+        <button class="view-tasks-btn">
+          View Tasks
+        </button>
+      </div>
+    } 
+    @empty {
+      <div class="empty-state">
+        <p>No projects found matching your search.</p>
+      </div>
+    }
+  </div>
+
+  @if (showAddModal) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>New Project</h2>
+          <button class="close-x" (click)="showAddModal = false">✕</button>
+        </div>
+
+        <input 
+          type="text" 
+          [(ngModel)]="newProjectName" 
+          placeholder="Enter project name..." 
+          class="modal-input">
+          
+        <div class="modal-actions">
+          <button class="cancel-btn" (click)="showAddModal = false">Cancel</button>
+          <button class="save-btn" (click)="createProject()" [disabled]="!newProjectName.trim()">Save</button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>

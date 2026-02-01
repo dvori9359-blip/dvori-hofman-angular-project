@@ -5,113 +5,132 @@
   </header>
 
   <div class="columns-wrapper">
-    <div class="column" *ngFor="let status of ['Todo', 'In Progress', 'Done']">
-      <h3>{{ status }}</h3>
-      <div class="tasks-list">
-        <div *ngFor="let task of getTasksByStatus(status)" class="task-card">
-          <span class="task-title">{{ task.title }}</span>
-          <p class="task-desc">{{ task.description }}</p>
+    @for (status of ['Todo', 'In Progress', 'Done']; track status) {
+      <div class="column">
+        <h3>{{ status }}</h3>
+        <div class="tasks-list">
           
-          <div class="card-footer">
-            <span class="priority-tag" [ngClass]="task.priority?.toLowerCase()">
-              {{ task.priority || 'Medium' }}
-            </span>
-            
-            <div class="task-actions">
-              <button class="action-btn-small edit" (click)="openTaskModal(task, false)" title="Edit Task">
-                ✏️
-              </button>
-              <button class="action-btn-small comment" (click)="openTaskModal(task, true)" title="Comments">
-                💭
-              </button>
+          @for (task of getTasksByStatus(status); track (task.id || task._id)) {
+            <div class="task-card">
+              <span class="task-title">{{ task.title }}</span>
+              <p class="task-desc">{{ task.description }}</p>
+              
+              <div class="card-footer">
+                <span class="priority-tag" [ngClass]="task.priority?.toLowerCase()">
+                  {{ task.priority || 'Medium' }}
+                </span>
+                
+                <div class="task-actions">
+                  <button class="action-btn-small edit" (click)="openTaskModal(task, false)" title="Edit Task">
+                    ✏️
+                  </button>
+                  <button class="action-btn-small comment" (click)="openTaskModal(task, true)" title="Comments">
+                    💭
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
+          <button class="add-ghost-btn" (click)="openCreateTaskModal(status)">+ Add task</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showCreateModal) {
+  <div class="modal-overlay" (click)="closeModals()">
+    <div class="modal-content small-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Create New Task</h2>
+        <button class="close-btn" (click)="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" [(ngModel)]="newTaskTitle" placeholder="Task name..." autofocus>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="newTaskStatus">
+            <option value="Todo">Todo</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-link" (click)="closeModals()">Cancel</button>
+        <button class="save-btn" (click)="createNewTask()">Create</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (selectedTask) {
+  <div class="modal-overlay" (click)="closeModals()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isCommentMode ? 'Comments' : 'Edit Task' }}</h2>
+        <button class="close-btn" (click)="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        @if (!isCommentMode) {
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" [(ngModel)]="selectedTask.title">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="selectedTask.description" rows="3"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Priority</label>
+              <select [(ngModel)]="selectedTask.priority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Assignee</label>
+              <select [(ngModel)]="selectedTask.assignee_id">
+                <option [value]="null">Unassigned</option>
+                @for (member of teamMembers(); track member.id) {
+                  <option [value]="member.id">{{ member.name }}</option>
+                }
+              </select>
             </div>
           </div>
+        }
+
+        <div class="comments-section" [class.highlight]="isCommentMode">
+          <h3>Discussion</h3>
+          <div class="comments-list">
+            
+            @for (c of comments(); track (c.id || $index)) {
+              <div class="comment-item">
+                <strong>{{ c.author_name || 'User' }}:</strong> {{ c.body }}
+              </div>
+            } 
+            @empty {
+              <p class="no-data">No comments yet.</p>
+            }
+
+          </div>
+          <div class="add-comment-box">
+            <input type="text" [(ngModel)]="newCommentText" placeholder="Write a comment..." (keyup.enter)="sendComment()">
+            <button (click)="sendComment()">Send</button>
+          </div>
         </div>
-        <button class="add-ghost-btn" (click)="openCreateTaskModal(status)">+ Add task</button>
+      </div>
+      <div class="modal-footer">
+        <button class="delete-btn" (click)="deleteTask(selectedTask.id)">Delete Task</button>
+        <button class="save-btn" (click)="saveTaskChanges()">Save Changes</button>
       </div>
     </div>
   </div>
-</div>
-
-<div class="modal-overlay" *ngIf="showCreateModal" (click)="closeModals()">
-  <div class="modal-content small-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Create New Task</h2>
-      <button class="close-btn" (click)="closeModals()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Task Title</label>
-        <input type="text" [(ngModel)]="newTaskTitle" placeholder="Task name..." autofocus>
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select [(ngModel)]="newTaskStatus">
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="cancel-link" (click)="closeModals()">Cancel</button>
-      <button class="save-btn" (click)="createNewTask()">Create</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" *ngIf="selectedTask" (click)="closeModals()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ isCommentMode ? 'Comments' : 'Edit Task' }}</h2>
-      <button class="close-btn" (click)="closeModals()">✕</button>
-    </div>
-    <div class="modal-body">
-      <ng-container *ngIf="!isCommentMode">
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" [(ngModel)]="selectedTask.title">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea [(ngModel)]="selectedTask.description" rows="3"></textarea>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Priority</label>
-            <select [(ngModel)]="selectedTask.priority">
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Assignee</label>
-            <select [(ngModel)]="selectedTask.assignee_id">
-              <option [value]="null">Unassigned</option>
-              <option *ngFor="let member of teamMembers()" [value]="member.id">{{ member.name }}</option>
-            </select>
-          </div>
-        </div>
-      </ng-container>
-
-      <div class="comments-section" [class.highlight]="isCommentMode">
-        <h3>Discussion</h3>
-        <div class="comments-list">
-          <div *ngFor="let c of comments()" class="comment-item">
-            <strong>{{ c.author_name || 'User' }}:</strong> {{ c.body }}
-          </div>
-          <p *ngIf="comments().length === 0" class="no-data">No comments yet.</p>
-        </div>
-        <div class="add-comment-box">
-          <input type="text" [(ngModel)]="newCommentText" placeholder="Write a comment..." (keyup.enter)="sendComment()">
-          <button (click)="sendComment()">Send</button>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="delete-btn" (click)="deleteTask(selectedTask.id)">Delete Task</button>
-      <button class="save-btn" (click)="saveTaskChanges()">Save Changes</button>
-    </div>
-  </div>
-</div>
+}

@@ -10,51 +10,68 @@
   <hr>
 
   <div class="teams-grid">
-    <div *ngFor="let team of teamsList()" class="team-card" (click)="onSelectTeam(team.id)">
-      <button class="manage-team-btn" (click)="openManageTeamModal(team.id, $event)" title="להוספת חבר">👥</button>
+    @for (team of teamsList(); track team.id) {
+      <div class="team-card" (click)="onSelectTeam(team.id)">
+        <button class="manage-team-btn" (click)="openManageTeamModal(team.id, $event)" title="Add Member">👥</button>
 
-      <div class="card-icon">👥</div>
-      <h3>{{ team.name }}</h3>
-      
-      <div class="members-badge">
-        <span class="count-number">{{ team.members_count || team.members?.length || 0 }}</span>
-        <span class="label">Members</span>
+        <div class="card-icon">👥</div>
+        <h3>{{ team.name }}</h3>
+        
+        <div class="members-badge">
+          <span class="count-number">{{ team.members_count || team.members?.length || 0 }}</span>
+          <span class="label">Members</span>
+        </div>
+        
+        <button class="enter-btn">Enter Team</button>
       </div>
-      
-      <button class="enter-btn">Enter Team</button>
-    </div>
+    }
+    @empty {
+      <p style="text-align:center; grid-column: 1/-1;">No teams found. Create one above!</p>
+    }
   </div>
 
-  <div class="modal-overlay" *ngIf="showTeamModal" (click)="showTeamModal = false">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h2>Manage Team Members</h2>
-      <div class="add-member-row">
-        <select [(ngModel)]="selectedUserIdToAdd">
-          <option [value]="null">Select user...</option>
-          <option *ngFor="let user of allUsersList()" [value]="user.id">{{ user.name }}</option>
-        </select>
-        <button class="save-btn" (click)="addMemberToTeam()" [disabled]="!selectedUserIdToAdd">Add</button>
-      </div>
+  @if (showTeamModal) {
+    <div class="modal-overlay" (click)="showTeamModal = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Manage Team Members</h2>
+        
+        <div class="add-member-row">
+          <select [(ngModel)]="selectedUserIdToAdd">
+            <option [value]="null">Select user...</option>
+            @for (user of allUsersList(); track user.id) {
+              <option [value]="user.id">{{ user.name }}</option>
+            }
+          </select>
+          <button class="save-btn" (click)="addMemberToTeam()" [disabled]="!selectedUserIdToAdd">Add</button>
+        </div>
 
-      <div class="members-list-area">
-        <h3>Current Members:</h3>
-        <ul class="clean-list">
-          <li *ngFor="let m of currentTeamMembers()" class="member-item-row">
-            <span>👤 {{ m.name }}</span>
-            <button class="delete-member-btn" (click)="removeMember(m.id)" title="הסר מהצוות">🗑️</button>
-          </li>
-        </ul>
-      </div>
-      <div class="modal-actions">
-        <button class="cancel-btn" (click)="showTeamModal = false">Close</button>
+        <div class="members-list-area">
+          <h3>Current Members:</h3>
+          <ul class="clean-list">
+            @for (m of currentTeamMembers(); track m.id) {
+              <li class="member-item-row">
+                <span>👤 {{ m.name }}</span>
+                <button class="delete-member-btn" (click)="removeMember(m.id)" title="Remove Member">🗑️</button>
+              </li>
+            }
+            @empty {
+              <li>No members in this team yet.</li>
+            }
+          </ul>
+        </div>
+        <div class="modal-actions">
+          <button class="cancel-btn" (click)="showTeamModal = false">Close</button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 
-  <div class="modal-overlay alert-layer" *ngIf="alertMessage()" (click)="alertMessage.set(null)">
-    <div class="modal-content alert-box">
-      <p>{{ alertMessage() }}</p>
-      <button class="save-btn" (click)="alertMessage.set(null)">OK</button>
+  @if (alertMessage()) {
+    <div class="modal-overlay alert-layer" (click)="alertMessage.set(null)">
+      <div class="modal-content alert-box">
+        <p>{{ alertMessage() }}</p>
+        <button class="save-btn" (click)="alertMessage.set(null)">OK</button>
+      </div>
     </div>
-  </div>
+  }
 </div>

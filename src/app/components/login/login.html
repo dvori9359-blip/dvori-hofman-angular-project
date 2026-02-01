@@ -3,16 +3,19 @@
     <h2>{{ isRegister ? 'Register' : 'Login' }}</h2>
     
     <form (ngSubmit)="onSubmit()">
-      <div class="form-group" *ngIf="isRegister">
-        <label for="name">Full Name</label>
-        <input 
-          type="text" 
-          id="name" 
-          [(ngModel)]="name" 
-          name="name" 
-          required
-          placeholder="Full Name">
-      </div>
+      
+      @if (isRegister) {
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            [(ngModel)]="name" 
+            name="name" 
+            required
+            placeholder="Full Name">
+        </div>
+      }
 
       <div class="form-group">
         <label for="email">Email</label>
@@ -36,9 +39,11 @@
           placeholder="********">
       </div>
 
-      <div class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+      @if (errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
 
       <button type="submit" [disabled]="isLoading" class="submit-btn">
         {{ isLoading ? 'Loading...' : (isRegister ? 'Register' : 'Login') }}
