@@ -44,15 +44,6 @@ export class AuthService {
     }
   }
 
-  updateUser(userData: User) {
-    try {
-      localStorage.setItem('user', JSON.stringify(userData));
-      this.currentUser.set(userData);
-    } catch (e) {
-      alert('הזיכרון מלא! נסה להעלות תמונה קטנה יותר.');
-    }
-  }
-
   logout() {
     localStorage.clear();
     this.currentUser.set(null);
