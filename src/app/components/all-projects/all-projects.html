@@ -5,81 +5,56 @@
       <input 
         type="text" 
         class="search-input" 
-        placeholder="Search projects..."
-        [ngModel]="searchTerm()"
+        placeholder="Search projects..." 
+        [ngModel]="searchTerm()" 
         (ngModelChange)="searchTerm.set($event)">
+      
+      <button class="add-btn-main" (click)="showAddModal = true">
+        + Create New Project
+      </button>
     </div>
   </header>
 
   <hr class="separator">
 
   <div class="teams-grid">
-    @for (project of filteredProjects(); track (project._id || project.id)) {
-      <div class="team-card" (click)="enterProject(project._id || project.id)">
-        
-        <div class="card-actions">
-          <button class="manage-btn-icon" (click)="openManageTeamModal(project, $event)" title="Manage Team">👥</button>
-          <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
-        </div>
+    <div *ngFor="let project of filteredProjects()" class="team-card" (click)="enterProject(project._id || project.id)">
+      
+      <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
 
-        <div class="card-content">
-          <div class="card-icon">🚀</div>
-          <h3 class="project-name">{{ project.name }}</h3>
-          <p class="team-id">ID: {{ project._id || project.id }}</p>
-        </div>
-        
-        <button class="enter-btn">
-          View Tasks
-        </button>
-      </div>
-    } @empty {
-      <div class="empty-state">
-        <p>No projects found matching your search.</p>
-      </div>
-    }
-  </div>
-</div>
-
-@if (showTeamModal) {
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Manage Team</h2>
-        <button class="close-x" (click)="closeModal()">✕</button>
+      <div class="card-content">
+        <div class="card-icon">🚀</div>
+        <h3 class="project-name">{{ project.name }}</h3>
+        <p class="team-id">Project ID: {{ project._id || project.id }}</p>
       </div>
       
-      <div class="form-group">
-        <label>Add New Member:</label>
-        <div class="add-member-row">
-          <select [(ngModel)]="selectedUserIdToAdd" class="modal-input">
-            <option [ngValue]="null">Select a user...</option>
-            @for (user of allUsersList(); track (user.id || user._id)) {
-              <option [value]="user.id || user._id">{{ user.name }} ({{ user.email }})</option>
-            }
-          </select>
-          <button class="save-btn" (click)="addMemberToProjectTeam()">Add</button>
-        </div>
-      </div>
-      
-      <div class="members-section">
-        <h4>Current Team Members:</h4>
-        <ul class="members-list">
-          @for (member of currentTeamMembers(); track (member.id || member._id)) {
-            <li>
-              <span class="member-name">{{ member.name }}</span>
-              <span class="member-email">{{ member.email }}</span>
-            </li>
-          } @empty {
-            <li class="no-members">No members in this team yet.</li>
-          }
-        </ul>
-      </div>
+      <button class="view-tasks-btn">
+        View Tasks
+      </button>
+    </div>
 
-      @if (alertMessage()) {
-        <p class="alert-text" [class.success]="alertMessage().includes('בהצלחה')">
-          {{ alertMessage() }}
-        </p>
-      }
+    <div *ngIf="filteredProjects().length === 0" class="empty-state">
+      <p>No projects found matching your search.</p>
     </div>
   </div>
-}
+
+  <div class="modal-overlay" *ngIf="showAddModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New Project</h2>
+        <button class="close-x" (click)="showAddModal = false">✕</button>
+      </div>
+
+      <input 
+        type="text" 
+        [(ngModel)]="newProjectName" 
+        placeholder="Enter project name..." 
+        class="modal-input">
+        
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="showAddModal = false">Cancel</button>
+        <button class="save-btn" (click)="createProject()" [disabled]="!newProjectName.trim()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
