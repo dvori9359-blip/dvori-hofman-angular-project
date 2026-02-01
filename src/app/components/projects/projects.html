@@ -1,9 +1,12 @@
 <div class="main-container">
+  
   <header class="teams-header">
-    <h1>My Teams</h1>
-    <div class="header-actions">
-      <input type="text" class="search-input" placeholder="New team name...">
-      <button class="add-btn-main" (click)="showAddModal = true">
+    <h1>Projects</h1>
+    
+    <div class="create-team-box">
+      <input type="text" placeholder="New project name..." #projectNameInput>
+      
+      <button (click)="createProject(projectNameInput.value); projectNameInput.value=''">
         + Create New Project
       </button>
     </div>
@@ -13,37 +16,23 @@
 
   <div class="teams-grid">
     @for (project of projectsList(); track (project._id || project.id)) {
-      <div class="team-card">
+      <div class="team-card" (click)="enterProject(project._id || project.id)">
+        
         <button class="delete-btn-x" (click)="onDeleteProject(project._id || project.id, $event)">✕</button>
 
-        <div class="card-content">
-          <div class="card-icon">🚀</div>
-          <h3 class="project-name">{{ project.name }}</h3>
-          <p class="team-id">Team ID: {{ project._id || project.id }}</p>
-        </div>
+        <div class="card-icon">🚀</div>
+        <h3>{{ project.name }}</h3>
+        <p class="team-id">ID: {{ project._id || project.id }}</p>
         
-        <button class="view-tasks-btn" (click)="enterProject(project._id || project.id)">
+        <button class="view-tasks-btn">
           View Tasks
         </button>
       </div>
-    }
+    } 
     @empty {
       <div class="empty-state">
         <p>No projects found in this team yet.</p>
       </div>
     }
   </div>
-
-  @if (showAddModal) {
-    <div class="modal-overlay">
-      <div class="modal-content">
-        <h2>New Project</h2>
-        <input type="text" #pName placeholder="Enter project name..." class="modal-input">
-        <div class="modal-actions">
-          <button class="cancel-btn" (click)="showAddModal = false">Cancel</button>
-          <button class="save-btn" (click)="createProject(pName.value)">Save</button>
-        </div>
-      </div>
-    </div>
-  }
 </div>

@@ -15,9 +15,7 @@ import { Project } from '../../models/project.model';
 export class Projects implements OnInit { 
   projectsList = signal<Project[]>([]); 
   currentTeamId: number | null = null;
-  showAddModal = false;
-  newProjectName = '';
-
+  
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private teamsService = inject(TeamsService); 
@@ -41,36 +39,45 @@ export class Projects implements OnInit {
     }
   }
 
-createProject(name: string): void {
-    if (!name.trim() || this.currentTeamId === null) return;
+  createProject(name: string): void {
+    if (!name.trim()) {
+      alert('Please enter a project name');
+      return;
+    }
+    if (!this.currentTeamId) {
+      console.error('Missing Team ID');
+      return;
+    }
 
     this.teamsService.createProject(this.currentTeamId, name).subscribe({
       next: (newProject: Project) => {
+        console.log('Project created successfully:', newProject);
         this.projectsList.update((projects) => [...projects, newProject]);
-        this.newProjectName = '';
-        this.showAddModal = false; 
       },
-      error: (err) => console.error('Error creating project:', err)
+      error: (err) => {
+        console.error('Server Error:', err);
+        const msg = err.error?.message || JSON.stringify(err.error) || 'Unknown Error';
+        alert('Failed to save project: ' + msg);
+      }
     });
-}
+  }
 
   onDeleteProject(projectId: any, event: Event): void {
     event.stopPropagation(); 
-    
     if (confirm('Are you sure you want to delete this project?')) {
-      const idToDelete = Number(projectId);
+      const idToDelete = Number(projectId); 
       this.teamsService.deleteProject(idToDelete).subscribe({
         next: () => {
-          this.projectsList.update(pList => pList.filter(p => p.id !== projectId && p._id !== projectId));
+          this.projectsList.update(pList => pList.filter(p => (p.id || p._id) !== projectId));
         },
-        error: (err) => alert('Deletion failed: ' + (err.error?.message || 'Permission denied'))
+        error: (err) => alert('Deletion failed')
       });
     }
   }
 
- enterProject(projectId: string | number | undefined): void {
-  if (projectId) {
-    this.router.navigate(['/tasks', projectId]);  
+  enterProject(projectId: string | number | undefined): void {
+    if (projectId) {
+      this.router.navigate(['/tasks', projectId]);  
+    }
   }
-}
 }

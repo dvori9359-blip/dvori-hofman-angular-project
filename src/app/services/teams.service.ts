@@ -7,14 +7,14 @@ import { Project } from '../models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class TeamsService {
-  addUserToTeam(selectedTeamIdForManage: number, selectedUserIdToAdd: number) {
-    throw new Error('Method not implemented.');
-  }
+  
   private projectsUrl = 'http://localhost:3000/api/projects'; 
   private teamsUrl = 'http://localhost:3000/api/teams'; 
   private usersUrl = 'http://localhost:3000/api/users'; 
   
   private http = inject(HttpClient); 
+
+  // --- קריאות לצוותים ---
 
   getTeams(): Observable<Team[]> {
     return this.http.get<Team[]>(this.teamsUrl); 
@@ -40,6 +40,8 @@ export class TeamsService {
     return this.http.delete(`${this.teamsUrl}/${teamId}/members/${userId}`); 
   }
 
+  // --- קריאות לפרויקטים ---
+
   getAllProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(this.projectsUrl);
   }
@@ -50,9 +52,17 @@ export class TeamsService {
     );
   }
 
-  createProject(teamId: number, name: string): Observable<Project> {
-    return this.http.post<Project>(this.projectsUrl, { team_id: teamId, name });
-  }
+
+createProject(teamId: number, name: string): Observable<Project> {
+  const payload = { name: name };
+  console.log('Trying Alternative Path...');
+
+  return this.http.post<Project>(this.projectsUrl, { 
+    ...payload,
+    teamId: teamId, 
+    team_id: teamId 
+  } as any);
+}
 
   deleteProject(projectId: number): Observable<void> {
     return this.http.delete<void>(`${this.projectsUrl}/${projectId}`); 
