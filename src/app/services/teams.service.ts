@@ -7,6 +7,9 @@ import { Project } from '../models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class TeamsService {
+  addUserToTeam(selectedTeamIdForManage: number, selectedUserIdToAdd: number) {
+    throw new Error('Method not implemented.');
+  }
   private projectsUrl = 'http://localhost:3000/api/projects'; 
   private teamsUrl = 'http://localhost:3000/api/teams'; 
   private usersUrl = 'http://localhost:3000/api/users'; 
