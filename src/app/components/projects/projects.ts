@@ -68,7 +68,9 @@ export class Projects implements OnInit {
     }
   }
 
-  enterProject(projectId: string | number): void {
+ enterProject(projectId: string | number | undefined): void {
+  if (projectId) {
     this.router.navigate(['/tasks', projectId]);  
   }
+}
 }
