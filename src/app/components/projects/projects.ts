@@ -1,58 +1,74 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/user.model';
+import { TeamsService } from '../../services/teams.service'; 
+import { Project } from '../../models/project.model';
 
 @Component({
-  selector: 'app-settings',
+  selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './settings.html',
-  styleUrls: ['./settings.css']
+  imports: [CommonModule, FormsModule], 
+  templateUrl: './projects.html',
+  styleUrls: ['./projects.css'], 
 })
-export class Settings implements OnInit {
-  public authService = inject(AuthService);
-  tempName = '';
-  previewUrl: string | null = null;
-  alertMessage = signal<string | null>(null);
+export class Projects implements OnInit { 
+  projectsList = signal<Project[]>([]); 
+  currentTeamId: number | null = null;
+  showAddModal = false;
+  newProjectName = '';
 
-  ngOnInit() {
-    const user = this.authService.currentUser();
-    if (user) {
-      this.tempName = user.name;
-      this.previewUrl = user.profileImage || null;
-    }
-  }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private teamsService = inject(TeamsService); 
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (file.size > 500 * 1024) {
-        alert('הקובץ גדול מדי! נא לבחור תמונה קטנה מ-500KB.');
-        return;
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const teamId = params.get('teamId');
+      if (teamId) {
+        this.currentTeamId = +teamId; 
+        this.loadProjects();
       }
+    });
+  }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+  loadProjects(): void {
+    if (this.currentTeamId) {
+      this.teamsService.getProjectsByTeam(this.currentTeamId).subscribe({
+        next: (data: Project[]) => this.projectsList.set(data || []),
+        error: (err) => console.error('Error loading projects:', err)
+      });
     }
   }
 
-  saveProfile() {
-    const current = this.authService.currentUser();
-    if (current && this.tempName.trim()) {
-      const updatedData: User = { 
-        ...current, 
-        name: this.tempName, 
-        profileImage: this.previewUrl || undefined 
-      };
-      this.authService.updateUser(updatedData);
-      this.alertMessage.set('הפרופיל עודכן בהצלחה!');
-      setTimeout(() => this.alertMessage.set(null), 3000);
+  createProject(): void {
+    if (!this.newProjectName.trim() || this.currentTeamId === null) return;
+
+    this.teamsService.createProject(this.currentTeamId, this.newProjectName).subscribe({
+      next: (newProject: Project) => {
+        this.projectsList.update((projects) => [...projects, newProject]);
+        this.newProjectName = '';
+        this.showAddModal = false;
+      },
+      error: (err) => console.error('Error creating project:', err)
+    });
+  }
+
+  onDeleteProject(projectId: any, event: Event): void {
+    event.stopPropagation(); 
+    
+    if (confirm('האם אתה בטוח שברצונך למחוק פרויקט זה?')) {
+      const idToDelete = Number(projectId);
+      this.teamsService.deleteProject(idToDelete).subscribe({
+        next: () => {
+          this.projectsList.update(pList => pList.filter(p => p.id !== projectId && p._id !== projectId));
+        },
+        error: (err) => alert('המחיקה נכשלה: ' + (err.error?.message || 'אין הרשאה'))
+      });
     }
+  }
+
+  enterProject(projectId: string | number): void {
+    this.router.navigate(['/tasks', projectId]);  
   }
 }
