@@ -3,7 +3,6 @@ import { Login } from './components/login/login';
 import { Teams } from './components/teams/teams';
 import { Projects } from './components/projects/projects';
 import { Tasks } from './components/tasks/tasks';
-import { Settings } from './components/settings/settings';
 import { AllProjects } from './components/all-projects/all-projects';
 import { authGuard } from './guards/auth.guard';
 
