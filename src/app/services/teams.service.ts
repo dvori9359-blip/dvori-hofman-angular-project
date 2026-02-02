@@ -1,16 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; 
 import { Team } from '../models/team.model';
 import { User } from '../models/user.model';
 import { Project } from '../models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class TeamsService {
-  
-  private projectsUrl = 'http://localhost:3000/api/projects'; 
-  private teamsUrl = 'http://localhost:3000/api/teams'; 
-  private usersUrl = 'http://localhost:3000/api/users'; 
+
+  private apiUrl = environment.apiUrl;
+  private projectsUrl = `${this.apiUrl}/projects`; 
+  private teamsUrl = `${this.apiUrl}/teams`; 
+  private usersUrl = `${this.apiUrl}/users`; 
   
   private http = inject(HttpClient); 
 
@@ -52,17 +54,16 @@ export class TeamsService {
     );
   }
 
+  createProject(teamId: number, name: string): Observable<Project> {
+    const payload = { name: name };
+    console.log('Trying Alternative Path...');
 
-createProject(teamId: number, name: string): Observable<Project> {
-  const payload = { name: name };
-  console.log('Trying Alternative Path...');
-
-  return this.http.post<Project>(this.projectsUrl, { 
-    ...payload,
-    teamId: teamId, 
-    team_id: teamId 
-  } as any);
-}
+    return this.http.post<Project>(this.projectsUrl, { 
+      ...payload,
+      teamId: teamId, 
+      team_id: teamId 
+    } as any);
+  }
 
   deleteProject(projectId: number): Observable<void> {
     return this.http.delete<void>(`${this.projectsUrl}/${projectId}`); 
